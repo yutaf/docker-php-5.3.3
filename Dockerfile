@@ -7,6 +7,7 @@ RUN yum install -y \
   gcc \
   ImageMagick \
   ImageMagick-devel \
+# php
   php \
   php-mysql \
   php-devel \
@@ -50,12 +51,9 @@ RUN \
   echo 'xdebug.remote_handler = dbgp' >> /etc/php.ini && \
   echo 'xdebug.idekey = PHPSTORM' >> /etc/php.ini
 
-#
 # Edit config files
-#
-
-# Apache config
 RUN \
+# Apache config
   sed -i 's;^#ServerName .*;ServerName localhost:80;' /etc/httpd/conf/httpd.conf && \
   mkdir -p /var/www/html/htdocs && \
   sed -i 's;^DocumentRoot .*;DocumentRoot "/var/www/html/htdocs";' /etc/httpd/conf/httpd.conf && \
