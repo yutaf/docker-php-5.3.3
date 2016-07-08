@@ -17,10 +17,4 @@ Vagrant.configure('2') do |config|
     provider.size = ENV['DO_SIZE']
     provider.ssh_key_name = 'vagrant'
   end
-  config.vm.provision :shell do |s|
-    s.inline = <<-EOT
-      cp /vagrant/templates/ssh/github_id_rsa /root/.ssh/id_rsa
-      chmod 600 /root/.ssh/id_rsa
-    EOT
-  end
 end
