@@ -76,10 +76,15 @@ RUN \
   echo '00 15 * * * find /var/www/html/log -not -regex ".*/\.[^/]*$" -type f -mtime +2 -exec rm -f {} \;' > /root/crontab && \
   crontab /root/crontab && \
 # mysql
+# alternative to　"mysql_secure_installation"
   /etc/init.d/mysqld start && \
-# cron
-  /etc/init.d/crond start
+  mysqladmin -u root password "root" && \
+  mysql -u root -proot -e "DELETE FROM mysql.user WHERE User='';" && \
+  mysql -u root -proot -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1');" && \
+  mysql -u root -proot -e "DROP DATABASE test;" && \
+  mysql -u root -proot -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" && \
+  /etc/init.d/mysqld stop
 
 #WORKDIR /srv/www
 EXPOSE 80 3306
-CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
+CMD ["/bin/bash", "-c", "/etc/init.d/mysqld start && /etc/init.d/crond start && /usr/sbin/httpd -DFOREGROUND"]
