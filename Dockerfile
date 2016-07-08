@@ -13,6 +13,9 @@ RUN yum install -y \
   php-devel \
   php-mbstring \
   php-pear \
+# mysql
+  mysql \
+  mysql-server \
 # cron
   crontabs.noarch
 
@@ -71,8 +74,12 @@ RUN \
   ln -sf /usr/share/zoneinfo/Japan /etc/localtime && \
 # Delete log files except dot files
   echo '00 15 * * * find /var/www/html/log -not -regex ".*/\.[^/]*$" -type f -mtime +2 -exec rm -f {} \;' > /root/crontab && \
-  crontab /root/crontab
+  crontab /root/crontab && \
+# mysql
+  /etc/init.d/mysqld start && \
+# cron
+  /etc/init.d/crond start
 
 #WORKDIR /srv/www
-EXPOSE 80
-CMD ["bash", "-c", "/etc/init.d/crond start && /usr/sbin/httpd -DFOREGROUND"]
+EXPOSE 80 3306
+CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
