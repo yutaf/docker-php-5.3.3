@@ -76,6 +76,10 @@ RUN \
   echo '00 15 * * * find /var/www/html/log -not -regex ".*/\.[^/]*$" -type f -mtime +2 -exec rm -f {} \;' > /root/crontab && \
   crontab /root/crontab && \
 # mysql
+  echo >> /etc/my.cnf && \
+  echo '[client]' >> /etc/my.cnf && \
+  echo 'default-character-set=utf8' >> /etc/my.cnf && \
+  sed -i 's;^\[mysqld\];&\ncharacter-set-server=utf8\ncollation-server=utf8_general_ci;' /etc/my.cnf && \
 # alternative to　"mysql_secure_installation"
   /etc/init.d/mysqld start && \
   mysqladmin -u root password "root" && \
