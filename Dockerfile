@@ -1,3 +1,4 @@
+# tag: yutaf/php-5.3.3
 FROM centos:6
 MAINTAINER yutaf <yutafuji2008@gmail.com>
 
