@@ -89,6 +89,4 @@ RUN \
   mysql -u root -proot -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" && \
   /etc/init.d/mysqld stop
 
-#WORKDIR /srv/www
-EXPOSE 80 3306
 CMD ["/bin/bash", "-c", "/etc/init.d/mysqld start && /etc/init.d/crond start && /usr/sbin/httpd -DFOREGROUND"]
