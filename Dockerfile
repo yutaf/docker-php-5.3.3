@@ -58,8 +58,12 @@ RUN \
   mkdir -p /var/www/html/htdocs && \
   echo "<?php echo 'hello, php';" > /var/www/html/htdocs/index.php && \
   echo "<?php phpinfo();" > /var/www/html/htdocs/info.php && \
+#
 # php.ini
+#
   sed -i 's;^expose_php.*;expose_php = Off;' /etc/php.ini && \
+  sed -i 's;^display_errors.*;display_errors = On;' /etc/php.ini && \
+  sed -i 's;^display_startup_errors.*;display_startup_errors = On;' /etc/php.ini && \
   echo 'zend_extension=/usr/lib64/php/modules/xdebug.so' >> /etc/php.ini && \
   echo 'extension=imagick.so' >> /etc/php.ini && \
 # composer
