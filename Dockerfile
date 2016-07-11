@@ -39,8 +39,26 @@ RUN \
   cd && \
   rm -r /usr/local/src/xdebug
 
-# php.ini
+#
+# Edit config files
+#
+
+COPY templates/apache.conf /etc/httpd/conf.d/apache.conf
 RUN \
+# Apache config
+  sed -i 's/^Listen 80/#&/' /etc/httpd/conf/httpd.conf && \
+  sed -i 's/^DocumentRoot/#&/' /etc/httpd/conf/httpd.conf && \
+  sed -i '/^<Directory/,/^<\/Directory/s/^/#/' /etc/httpd/conf/httpd.conf && \
+  sed -i 's;ScriptAlias /cgi-bin;#&;' /etc/httpd/conf/httpd.conf && \
+  mkdir -p -m 777 /var/www/html/log/ && \
+  sed -i 's;^CustomLog .*;CustomLog "|/usr/sbin/rotatelogs /var/www/html/log/access.%Y%m%d.log 86400 540" combined;' /etc/httpd/conf/httpd.conf && \
+  sed -i 's;^ErrorLog .*;ErrorLog "|/usr/sbin/rotatelogs /var/www/html/log/error.%Y%m%d.log 86400 540";' /etc/httpd/conf/httpd.conf && \
+  sed -i 's;^ServerTokens .*;ServerTokens Prod;' /etc/httpd/conf/httpd.conf && \
+# Create php scripts for check
+  mkdir -p /var/www/html/htdocs && \
+  echo "<?php echo 'hello, php';" > /var/www/html/htdocs/index.php && \
+  echo "<?php phpinfo();" > /var/www/html/htdocs/info.php && \
+# php.ini
   sed -i 's;^expose_php.*;expose_php = Off;' /etc/php.ini && \
   echo 'zend_extension=/usr/lib64/php/modules/xdebug.so' >> /etc/php.ini && \
   echo 'extension=imagick.so' >> /etc/php.ini && \
@@ -53,22 +71,7 @@ RUN \
   echo 'xdebug.remote_autostart = 1' >> /etc/php.ini && \
   echo 'xdebug.remote_connect_back=1' >> /etc/php.ini && \
   echo 'xdebug.remote_handler = dbgp' >> /etc/php.ini && \
-  echo 'xdebug.idekey = PHPSTORM' >> /etc/php.ini
-
-# Edit config files
-RUN \
-# Apache config
-  sed -i 's;^#ServerName .*;ServerName localhost:80;' /etc/httpd/conf/httpd.conf && \
-  mkdir -p /var/www/html/htdocs && \
-  sed -i 's;^DocumentRoot .*;DocumentRoot "/var/www/html/htdocs";' /etc/httpd/conf/httpd.conf && \
-  sed -i 's;^<Directory "/var/www/html">;<Directory "/var/www/html/htdocs">;' /etc/httpd/conf/httpd.conf && \
-  mkdir -p -m 777 /var/www/html/log/ && \
-  sed -i 's;^CustomLog .*;CustomLog "|/usr/sbin/rotatelogs /var/www/html/log/access.%Y%m%d.log 86400 540" combined;' /etc/httpd/conf/httpd.conf && \
-  sed -i 's;^ErrorLog .*;ErrorLog "|/usr/sbin/rotatelogs /var/www/html/log/error.%Y%m%d.log 86400 540";' /etc/httpd/conf/httpd.conf && \
-  sed -i 's;^ServerTokens .*;ServerTokens Prod;' /etc/httpd/conf/httpd.conf && \
-# Create php scripts for check
-  echo "<?php echo 'hello, php';" > /var/www/html/htdocs/index.php && \
-  echo "<?php phpinfo();" > /var/www/html/htdocs/info.php && \
+  echo 'xdebug.idekey = PHPSTORM' >> /etc/php.ini && \
 # set TERM
   echo export TERM=xterm-256color >> /root/.bashrc && \
 # set timezone
