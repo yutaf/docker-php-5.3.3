@@ -14,6 +14,7 @@ RUN yum install -y \
   php-mbstring \
   php-pear \
   php-xml \
+  php-gd \
 # mysql
   mysql \
   mysql-server \
