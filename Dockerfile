@@ -68,6 +68,8 @@ RUN \
   sed -i 's;^display_startup_errors.*;display_startup_errors = On;' /etc/php.ini && \
 # timezone
   sed -i 's/^;date.timezone.*/date.timezone = GMT/' /etc/php.ini && \
+# memory
+  sed -i 's;^memory_limit.*;memory_limit = 256M;' /etc/php.ini && \
 # composer
   echo 'curl.cainfo=/root/ca-bundle-curl.crt' >> /etc/php.ini && \
   echo 'openssl.cafile=/root/ca-bundle-curl.crt' >> /etc/php.ini && \
