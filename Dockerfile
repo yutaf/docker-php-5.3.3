@@ -82,6 +82,9 @@ RUN \
   echo 'xdebug.remote_autostart = 1' >> /etc/php.ini && \
   echo 'xdebug.remote_connect_back=1' >> /etc/php.ini && \
   echo 'xdebug.remote_handler = dbgp' >> /etc/php.ini && \
+  echo 'xdebug.var_display_max_depth = -1' >> /etc/php.ini && \
+  echo 'xdebug.var_display_max_children = -1' >> /etc/php.ini && \
+  echo 'xdebug.var_display_max_data = -1' >> /etc/php.ini && \
   echo 'xdebug.idekey = PHPSTORM' >> /etc/php.ini && \
 # set TERM
   echo export TERM=xterm-256color >> /root/.bashrc && \
